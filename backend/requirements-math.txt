@@ -1,0 +1,27 @@
+# Formula-aware OCR (the pdf2tex fallback), minus the parts that depend on the
+# machine's hardware.
+#
+# Two things are deliberately not pinned here:
+#
+#   * torch/torchvision/torchaudio. The CUDA build carries a +cu128 local
+#     version that PyPI does not publish, so naming them here would let a
+#     resolution replace it with CPU wheels. setup_tools/pytorch.py owns them.
+#   * The ONNX Runtime build. requirements-onnx-cpu.txt and
+#     requirements-onnx-cuda.txt hold that choice; setup.py installs whichever
+#     matches the hardware. The two distributions install the same `onnxruntime`
+#     package and must never both be present.
+-r requirements.txt
+
+pix2text==1.1.7
+transformers>=4.45,<4.54
+
+# Keeps the ORTModelForVision2Seq API Pix2Text uses for its ONNX models.
+#
+# This was optimum[onnxruntime]==1.27.0, pinned when the project ran on Torch
+# 2.8. Optimum 1.27 imports torch.onnx.symbolic_opset14._attention_scale at
+# module scope, and Torch 2.11 removed it, so `import pix2text` fails outright
+# with that pin -- the ONNX exporter gets pulled in even though this project
+# only ever loads models exported elsewhere. Optimum 2.1 moved the ONNX Runtime
+# integration into the separate optimum-onnx distribution and dropped the
+# import. The runtime extra is applied by the two files named above.
+optimum==2.1.0

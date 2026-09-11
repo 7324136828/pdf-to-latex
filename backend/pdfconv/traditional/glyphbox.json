@@ -1,0 +1,568 @@
+{
+"MTEX": {
+"braceex": [
+-312,
+12
+],
+"bracehtipdownleft": [
+-188,
+102
+],
+"bracehtipdownright": [
+-188,
+102
+],
+"bracehtipupleft": [
+0,
+290
+],
+"bracehtipupright": [
+0,
+290
+],
+"braceleftBig": [
+-1754,
+46
+],
+"braceleftBigg": [
+-2954,
+46
+],
+"braceleftbig": [
+-1156,
+46
+],
+"braceleftbigg": [
+-2354,
+46
+],
+"braceleftbt": [
+-900,
+12
+],
+"braceleftmid": [
+-1812,
+12
+],
+"bracelefttp": [
+-912,
+0
+],
+"bracerightBig": [
+-1754,
+46
+],
+"bracerightBigg": [
+-2954,
+46
+],
+"bracerightbig": [
+-1156,
+46
+],
+"bracerightbigg": [
+-2354,
+46
+],
+"bracerightbt": [
+-900,
+12
+],
+"bracerightmid": [
+-1812,
+12
+],
+"bracerighttp": [
+-912,
+0
+],
+"bracketleftBig": [
+-1754,
+46
+],
+"bracketleftBigg": [
+-2954,
+46
+],
+"bracketleftbig": [
+-1154,
+46
+],
+"bracketleftbigg": [
+-2354,
+46
+],
+"bracketleftbt": [
+-1754,
+46
+],
+"bracketleftex": [
+-598,
+0
+],
+"bracketlefttp": [
+-1774,
+46
+],
+"bracketrightBig": [
+-1754,
+46
+],
+"bracketrightBigg": [
+-2954,
+46
+],
+"bracketrightbig": [
+-1154,
+46
+],
+"bracketrightbigg": [
+-2354,
+46
+],
+"bracketrightbt": [
+-1754,
+46
+],
+"bracketrightex": [
+-598,
+0
+],
+"bracketrighttp": [
+-1774,
+46
+],
+"integraldisplay": [
+-2221,
+0
+],
+"integraltext": [
+-1109,
+0
+],
+"intersectiondisplay": [
+-1400,
+0
+],
+"intersectiontext": [
+-1000,
+0
+],
+"parenleftBig": [
+-1754,
+46
+],
+"parenleftBigg": [
+-2954,
+46
+],
+"parenleftbig": [
+-1154,
+46
+],
+"parenleftbigg": [
+-2354,
+46
+],
+"parenleftbt": [
+-1754,
+46
+],
+"parenleftex": [
+-612,
+12
+],
+"parenlefttp": [
+-1774,
+46
+],
+"parenrightBig": [
+-1754,
+46
+],
+"parenrightBigg": [
+-2954,
+46
+],
+"parenrightbig": [
+-1154,
+46
+],
+"parenrightbigg": [
+-2354,
+46
+],
+"parenrightbt": [
+-1754,
+46
+],
+"parenrightex": [
+-612,
+12
+],
+"parenrighttp": [
+-1774,
+46
+],
+"productdisplay": [
+-1400,
+0
+],
+"producttext": [
+-1000,
+0
+],
+"radicalBig": [
+-1753,
+46
+],
+"radicalBigg": [
+-2955,
+46
+],
+"radicalbig": [
+-1159,
+46
+],
+"radicalbigg": [
+-2351,
+46
+],
+"radicalbt": [
+-1796,
+24
+],
+"radicaltp": [
+-550,
+46
+],
+"radicalvertex": [
+-599,
+18
+],
+"slashBig": [
+-1754,
+46
+],
+"slashBigg": [
+-2954,
+46
+],
+"slashbig": [
+-1154,
+46
+],
+"summationdisplay": [
+-1400,
+0
+],
+"summationtext": [
+-1000,
+0
+],
+"uniondisplay": [
+-1400,
+0
+],
+"uniontext": [
+-1000,
+0
+],
+"vextenddouble": [
+-596,
+18
+],
+"vextendsingle": [
+-596,
+18
+]
+},
+"MTSY": {
+"angbracketleft": [
+-181,
+668
+],
+"angbracketright": [
+-181,
+668
+],
+"arrowright": [
+32,
+468
+],
+"asteriskmath": [
+7,
+467
+],
+"backslash": [
+-205,
+668
+],
+"bar": [
+-181,
+668
+],
+"braceleft": [
+-181,
+680
+],
+"braceright": [
+-181,
+680
+],
+"bullet": [
+28,
+417
+],
+"element": [
+-24,
+494
+],
+"emptyset": [
+-34,
+689
+],
+"equal": [
+105,
+363
+],
+"intersection": [
+0,
+613
+],
+"minus": [
+225,
+275
+],
+"negationslash": [
+-204,
+668
+],
+"openbullet": [
+29,
+417
+],
+"periodcentered": [
+182,
+291
+],
+"plus": [
+-83,
+583
+],
+"prime": [
+39,
+518
+],
+"radical": [
+-954,
+47
+],
+"semicolon": [
+-144,
+456
+],
+"union": [
+0,
+613
+]
+},
+"NewOptr2k": {
+".notdef": [
+207,
+416
+],
+"K": [
+169,
+477
+],
+"L": [
+126,
+517
+],
+"Uacute": [
+79,
+585
+],
+"Z": [
+0,
+631
+],
+"asterisk": [
+28,
+618
+],
+"ellipsis": [
+79,
+585
+],
+"numbersign": [
+740,
+850
+],
+"parenleft": [
+0,
+612
+],
+"parenright": [
+0,
+612
+],
+"period": [
+0,
+700
+],
+"q": [
+-11,
+442
+],
+"semicolon": [
+0,
+618
+],
+"three": [
+24,
+519
+]
+},
+"RMTMI": {
+"Gamma1": [
+0,
+657
+],
+"Omega1": [
+0,
+670
+],
+"Phi1": [
+0,
+657
+],
+"Psi1": [
+0,
+657
+],
+"Theta": [
+-13,
+669
+],
+"Theta1": [
+-14,
+671
+],
+"alpha": [
+-11,
+445
+],
+"beta": [
+-199,
+671
+],
+"chi": [
+-189,
+440
+],
+"epsilon": [
+-12,
+458
+],
+"epsilon1": [
+-12,
+456
+],
+"gamma": [
+-206,
+449
+],
+"greater": [
+2,
+455
+],
+"lambda": [
+-4,
+647
+],
+"less": [
+2,
+455
+],
+"lscript": [
+-12,
+668
+],
+"mu": [
+-188,
+440
+],
+"nu": [
+-9,
+452
+],
+"parenleft": [
+-177,
+676
+],
+"parenright": [
+-177,
+676
+],
+"period": [
+-11,
+100
+],
+"phi": [
+-193,
+661
+],
+"pi": [
+-12,
+461
+],
+"rho": [
+-189,
+451
+],
+"sigma": [
+-4,
+448
+],
+"slash": [
+-207,
+672
+],
+"theta": [
+-12,
+669
+],
+"xi": [
+-190,
+680
+],
+"zeta": [
+-197,
+607
+]
+},
+"RMTMIB": {
+"greater": [
+2,
+455
+],
+"lambda": [
+-9,
+672
+],
+"mu": [
+-188,
+462
+],
+"pi": [
+-13,
+462
+],
+"sigma": [
+-13,
+462
+]
+}
+}
