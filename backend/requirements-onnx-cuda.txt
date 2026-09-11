@@ -1,0 +1,11 @@
+# ONNX Runtime for NVIDIA GeForce RTX machines: this build provides the
+# CUDAExecutionProvider that runs the formula recognizer on the GPU.
+#
+# It loads cuBLAS and cuDNN at session creation and does not ship them. The
+# CUDA 12.8 torch wheels do, in torch/lib, and importing torch puts that folder
+# on the DLL search path -- which is why pdfconv.pdf2tex.math_ocr imports torch
+# before onnxruntime. Without that, the provider silently falls back to CPU.
+#
+# Never install this alongside requirements-onnx-cpu.txt.
+optimum[onnxruntime-gpu]==2.1.0
+onnxruntime-gpu==1.22.0

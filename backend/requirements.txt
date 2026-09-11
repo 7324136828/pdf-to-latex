@@ -1,0 +1,26 @@
+# Base dependencies for both converters.
+#
+# torch, torchvision and torchaudio are deliberately absent: the CUDA build an
+# NVIDIA GeForce RTX machine needs carries a +cu128 local version that PyPI does
+# not publish, so installing them from here would replace it with CPU wheels.
+# setup_tools/pytorch.py is the single place those three are installed.
+
+# The text-layer converter and every page rendering path.
+PyMuPDF>=1.24,<2
+
+# Image handling for the OCR fallback's page images.
+pillow>=10
+
+# Apple Vision plain-text OCR, still available through pdfconv.pdf2tex.main.
+pyobjc-framework-Vision>=10; sys_platform == "darwin"
+pyobjc-framework-Quartz>=10; sys_platform == "darwin"
+pyobjc-framework-CoreML>=10; sys_platform == "darwin"
+
+# Recover missing PDF Unicode from verified installed font outlines.
+fonttools>=4.50
+
+# Web backend & API service
+fastapi>=0.110.0
+uvicorn[standard]>=0.28.0
+python-multipart>=0.0.9
+pydantic>=2.0.0
