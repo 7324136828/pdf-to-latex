@@ -43,6 +43,34 @@ Both routes feed into `chapter_split`, generating clean, compilable per-chapter 
 
 ---
 
+## Interface Walkthrough
+
+### 1. Add PDFs and configure a conversion
+
+Upload one or more PDFs by browsing, dragging and dropping, or pasting from the clipboard. The landing page reports the active compute device, exposes text/OCR conversion settings, and keeps prior work one click away.
+
+![PDF to LaTeX landing page with upload and conversion settings](images/landing-page.png)
+
+### 2. Follow live conversion progress
+
+While a job is running, the interface shows its current status, progress bar, and streaming diagnostic output. You can start another conversion without losing access to the active job.
+
+![Conversion progress and diagnostic output](images/processing_page.png)
+
+### 3. Review and download generated LaTeX
+
+Completed conversions list their generated chapters. Preview or download individual `.tex` files, or download the complete output bundle as a ZIP archive.
+
+![Completed conversion with generated LaTeX output and ZIP download](images/success_page.png)
+
+### 4. Reopen conversion history
+
+The Conversion History screen retains completed, interrupted, and in-progress jobs. Resume checkpointed work, discard work you no longer need, or download the ZIP for a completed conversion.
+
+![Conversion history showing completed PDF to LaTeX jobs](images/history_page.png)
+
+---
+
 ## Quick Start
 
 ### 1. Prerequisites
