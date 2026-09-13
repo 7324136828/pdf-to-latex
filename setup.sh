@@ -4,12 +4,13 @@ set -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd "$DIR"
 
-# Prefer Python 3.12 or 3.11 if available
-PYTHON_CMD="python3"
-if command -v python3.12 >/dev/null 2>&1; then
-    PYTHON_CMD="python3.12"
-elif command -v python3.11 >/dev/null 2>&1; then
-    PYTHON_CMD="python3.11"
+# Python 3.14.6 is the project's tested runtime. The setup code verifies the
+# patch release before creating or reusing the virtual environment.
+PYTHON_CMD="python3.14"
+if ! command -v "$PYTHON_CMD" >/dev/null 2>&1; then
+    echo "ERROR: Python 3.14.6 was not found." >&2
+    echo "Install Python 3.14.6 from python.org, then run setup.sh again." >&2
+    exit 1
 fi
 
 exec "$PYTHON_CMD" "$DIR/setup.py" "$@"

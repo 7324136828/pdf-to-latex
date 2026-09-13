@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 import sys
-from typing import List, Optional
+from pathlib import Path
+
 from fastapi import APIRouter, File, Form, HTTPException, Response, UploadFile
 from fastapi.responses import PlainTextResponse
-
-from pathlib import Path
 
 BACKEND_ROOT = Path(__file__).resolve().parent.parent
 PROJECT_ROOT = BACKEND_ROOT.parent
@@ -82,7 +81,7 @@ def health_check():
 
 @router.post("/convert")
 async def create_conversion_job(
-    files: List[UploadFile] = File(...),
+    files: list[UploadFile] = File(...),
     device: str = Form("auto"),
     mode: str = Form("hybrid"),
     dpi: int = Form(300),
@@ -122,7 +121,7 @@ async def create_conversion_job(
     }
 
 
-@router.get("/jobs", response_model=List[JobSummaryResponse])
+@router.get("/jobs", response_model=list[JobSummaryResponse])
 def list_jobs():
     return [_job_summary(job) for job in job_manager.list_jobs()]
 

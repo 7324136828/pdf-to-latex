@@ -11,10 +11,13 @@ import threading
 import time
 from pathlib import Path
 
+from backend.setup_tools.environment import REQUIRED_PYTHON
+
 PROJECT_ROOT = Path(__file__).resolve().parent
 VENV_DIR = PROJECT_ROOT / ".venv"
 BACKEND_DIR = PROJECT_ROOT / "backend"
 FRONTEND_DIR = PROJECT_ROOT / "frontend"
+REQUIRED_PYTHON_TEXT = ".".join(str(part) for part in REQUIRED_PYTHON)
 
 
 def get_venv_python() -> Path:
@@ -24,12 +27,17 @@ def get_venv_python() -> Path:
 
 
 def is_usable_python(interpreter: Path) -> bool:
-    """Return whether an environment interpreter can start successfully."""
+    """Return whether the environment uses the required working Python."""
     if not interpreter.is_file():
         return False
     try:
         completed = subprocess.run(
-            [str(interpreter), "-c", "import ensurepip, sys"],
+            [
+                str(interpreter),
+                "-c",
+                "import ensurepip, sys; "
+                f"raise SystemExit(sys.version_info[:3] != {REQUIRED_PYTHON!r})",
+            ],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
             timeout=30,
@@ -56,7 +64,12 @@ def stream_output(process: subprocess.Popen, prefix: str):
 def main():
     venv_py = get_venv_python()
     if not is_usable_python(venv_py):
-        print(f"Error: Virtual environment is missing or unusable at {VENV_DIR}", file=sys.stderr)
+        print(
+            f"Error: Python {REQUIRED_PYTHON_TEXT} virtual environment is "
+            "missing or unusable "
+            f"at {VENV_DIR}",
+            file=sys.stderr,
+        )
         print("Please run setup.bat (Windows) or ./setup.sh (Linux/macOS) first.", file=sys.stderr)
         sys.exit(1)
 
