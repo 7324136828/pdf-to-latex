@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import sys
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -20,10 +23,20 @@ except ImportError:
     from api.routes import router as api_router
     from services.job_manager import job_manager
 
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
+    """Run service startup work using FastAPI's lifespan interface."""
+    # Keep recoverable jobs for a week so a restart does not discard results.
+    job_manager.cleanup_old_jobs(max_age_seconds=7 * 24 * 60 * 60)
+    yield
+
+
 app = FastAPI(
     title="PDF to LaTeX Conversion Service",
     description="Production-ready PDF to LaTeX conversion with GPU-accelerated OCR and chapter splitting.",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
 # CORS support for local React frontend development
@@ -36,12 +49,6 @@ app.add_middleware(
 )
 
 app.include_router(api_router)
-
-
-@app.on_event("startup")
-async def startup_event():
-    # Keep recoverable jobs for a week so a restart does not discard results.
-    job_manager.cleanup_old_jobs(max_age_seconds=7 * 24 * 60 * 60)
 
 
 @app.get("/")

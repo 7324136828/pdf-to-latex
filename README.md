@@ -75,7 +75,7 @@ The Conversion History screen retains completed, interrupted, and in-progress jo
 
 ### 1. Prerequisites
 
-- **Python**: 3.11, 3.12, or 3.13 (Python 3.12 recommended; PyTorch and ONNX wheels require ≤ 3.13).
+- **Python**: 3.14.6.
 - **Node.js**: v18 or later (for the React Web UI).
 - **GPU (Optional)**: NVIDIA GeForce RTX GPU with CUDA 12.8 for accelerated formula OCR. Automatic CPU fallback is supported on all systems.
 
@@ -87,7 +87,7 @@ Run the setup script for your platform:
 ```bat
 setup.bat
 ```
-*(On Windows systems where Python 3.14+ is the default command, `setup.bat` automatically selects Python 3.12 or 3.11 via the Windows `py` launcher).*
+*On Windows, `setup.bat` selects Python 3.14 through the `py` launcher and verifies that its patch version is 3.14.6.*
 
 **Linux / macOS**:
 ```bash

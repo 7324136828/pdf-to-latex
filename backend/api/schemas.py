@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import List, Optional, Literal
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 
@@ -26,13 +27,13 @@ class JobStatusResponse(BaseModel):
     progress: float
     message: str
     files_count: int = 0
-    source_files: List[str] = Field(default_factory=list)
+    source_files: list[str] = Field(default_factory=list)
     chapters_count: int = 0
-    logs: List[str] = Field(default_factory=list)
-    outputs: List[OutputFile] = Field(default_factory=list)
+    logs: list[str] = Field(default_factory=list)
+    outputs: list[OutputFile] = Field(default_factory=list)
     created_at: str
-    completed_at: Optional[str] = None
-    error: Optional[str] = None
+    completed_at: str | None = None
+    error: str | None = None
 
 
 class JobSummaryResponse(BaseModel):
@@ -40,15 +41,15 @@ class JobSummaryResponse(BaseModel):
     status: Literal["queued", "converting", "interrupted", "discarding", "completed", "failed"]
     message: str
     files_count: int = 0
-    source_files: List[str] = Field(default_factory=list)
+    source_files: list[str] = Field(default_factory=list)
     chapters_count: int = 0
     created_at: str
-    completed_at: Optional[str] = None
+    completed_at: str | None = None
 
 
 class HealthResponse(BaseModel):
     status: str
     gpu_available: bool
-    gpu_names: List[str]
+    gpu_names: list[str]
     has_rtx: bool
     python_version: str

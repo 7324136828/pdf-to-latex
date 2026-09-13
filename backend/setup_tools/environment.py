@@ -16,9 +16,8 @@ import sys
 import venv
 from pathlib import Path
 
-#: Pix2Text's ONNX runtime publishes wheels for these; torch is happy here too.
-MINIMUM_PYTHON = (3, 11)
-MAXIMUM_PYTHON = (3, 14)          # exclusive
+#: Keep setup and the project launchers on the tested runtime release.
+REQUIRED_PYTHON = (3, 14, 6)
 
 #: Set on the child process so a failure to detect ``.venv`` cannot loop.
 REENTRY_MARKER = "PDFCONV_SETUP_REENTERED"
@@ -36,13 +35,12 @@ def version_text(info=None) -> str:
 def check_python_version(info=None) -> str:
     """-> a description of this interpreter, or raise if it is unsupported."""
     info = info or sys.version_info
-    current = (info.major, info.minor)
-    if current < MINIMUM_PYTHON or current >= MAXIMUM_PYTHON:
+    current = (info.major, info.minor, info.micro)
+    if current != REQUIRED_PYTHON:
+        required = ".".join(str(part) for part in REQUIRED_PYTHON)
         raise SetupError(
             f"Python {version_text(info)} is not supported. This project needs "
-            f"Python {MINIMUM_PYTHON[0]}.{MINIMUM_PYTHON[1]} up to "
-            f"{MAXIMUM_PYTHON[0]}.{MAXIMUM_PYTHON[1] - 1}: the OCR runtime "
-            "publishes wheels only for those versions.\n"
+            f"Python {required}.\n"
             f"Interpreter: {sys.executable}")
     return f"Python {version_text(info)} at {sys.executable}"
 
@@ -66,18 +64,29 @@ def running_inside(venv_dir: Path) -> bool:
 
 
 def is_usable(venv_dir: Path) -> bool:
-    """-> True when ``venv_dir`` holds an interpreter that actually starts.
+    """-> True when ``venv_dir`` holds the required working interpreter.
 
     A previous run interrupted midway leaves a directory that looks like an
-    environment and is not one; that has to be recreated rather than used.
+    environment and is not one. An environment created with another Python
+    release must also be recreated rather than silently reused.
     """
     interpreter = venv_python(venv_dir)
     if not interpreter.is_file():
         return False
+    required = repr(REQUIRED_PYTHON)
     try:
-        completed = subprocess.run([str(interpreter), "-c", "import sys, ensurepip"],
-                                   capture_output=True, text=True, timeout=120,
-                                   check=False)
+        completed = subprocess.run(
+            [
+                str(interpreter),
+                "-c",
+                "import ensurepip, sys; "
+                f"raise SystemExit(sys.version_info[:3] != {required})",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=120,
+            check=False,
+        )
     except (OSError, subprocess.SubprocessError):
         return False
     return completed.returncode == 0
