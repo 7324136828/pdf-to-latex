@@ -4,6 +4,10 @@ set -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd "$DIR"
 
+if [ -n "${VIRTUAL_ENV:-}${CONDA_PREFIX:-}" ]; then
+    exec python "$DIR/setup.py" "$@"
+fi
+
 # Python 3.14.6 is the project's tested runtime. The setup code verifies the
 # patch release before creating or reusing the virtual environment.
 PYTHON_CMD="python3.14"
