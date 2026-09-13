@@ -20,7 +20,7 @@ pyobjc-framework-CoreML>=10; sys_platform == "darwin"
 fonttools>=4.50
 
 # Web backend & API service
-fastapi>=0.115.0
-uvicorn[standard]>=0.29
+fastapi>=0.115,<1.0
+uvicorn[standard]>=0.30,<1.0
 python-multipart>=0.0.20,<1.0
-pydantic>=2.6
+pydantic>=2.7,<3.0
