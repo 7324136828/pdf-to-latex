@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import os
 import signal
+import socket
 import subprocess
 import sys
 import threading
@@ -20,10 +21,49 @@ FRONTEND_DIR = PROJECT_ROOT / "frontend"
 REQUIRED_PYTHON_TEXT = ".".join(str(part) for part in REQUIRED_PYTHON)
 
 
-def get_venv_python() -> Path:
+def get_local_venv_python() -> Path:
     if os.name == "nt":
         return VENV_DIR / "Scripts" / "python.exe"
     return VENV_DIR / "bin" / "python"
+
+
+def in_active_environment() -> bool:
+    return (
+        sys.prefix != getattr(sys, "base_prefix", sys.prefix)
+        or bool(os.environ.get("VIRTUAL_ENV"))
+        or bool(os.environ.get("CONDA_PREFIX"))
+    )
+
+
+def get_runtime_python() -> Path:
+    if in_active_environment():
+        return Path(sys.executable)
+    return get_local_venv_python()
+
+
+def requested_port(variable: str, default: int) -> int:
+    value = os.environ.get(variable, str(default))
+    try:
+        port = int(value)
+    except ValueError as error:
+        raise RuntimeError(f"{variable} must be an integer, not {value!r}") from error
+    if not 1 <= port <= 65535:
+        raise RuntimeError(f"{variable} must be between 1 and 65535")
+    return port
+
+
+def available_port(start: int, reserved: set[int] | None = None) -> int:
+    reserved = reserved or set()
+    for port in range(start, 65536):
+        if port in reserved:
+            continue
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
+            try:
+                probe.bind(("127.0.0.1", port))
+            except OSError:
+                continue
+        return port
+    raise RuntimeError(f"No available TCP port was found at or above {start}")
 
 
 def is_usable_python(interpreter: Path) -> bool:
@@ -62,28 +102,34 @@ def stream_output(process: subprocess.Popen, prefix: str):
 
 
 def main():
-    venv_py = get_venv_python()
-    if not is_usable_python(venv_py):
+    runtime_py = get_runtime_python()
+    if not is_usable_python(runtime_py):
         print(
-            f"Error: Python {REQUIRED_PYTHON_TEXT} virtual environment is "
-            "missing or unusable "
-            f"at {VENV_DIR}",
+            f"Error: the selected Python environment is missing, unusable, or is "
+            f"not Python {REQUIRED_PYTHON_TEXT}: {runtime_py}",
             file=sys.stderr,
         )
         print("Please run setup.bat (Windows) or ./setup.sh (Linux/macOS) first.", file=sys.stderr)
         sys.exit(1)
 
-    # If not running inside .venv, re-enter with .venv python
-    if Path(sys.executable).resolve() != venv_py.resolve():
-        cmd = [str(venv_py), str(Path(__file__).resolve())] + sys.argv[1:]
+    if Path(sys.executable).resolve() != runtime_py.resolve():
+        cmd = [str(runtime_py), str(Path(__file__).resolve())] + sys.argv[1:]
         sys.exit(subprocess.call(cmd))
+
+    backend_port = available_port(requested_port("BACKEND_PORT", 8000))
+    frontend_port = available_port(
+        requested_port("FRONTEND_PORT", 5173), {backend_port}
+    )
+    backend_url = f"http://127.0.0.1:{backend_port}"
+    frontend_url = f"http://localhost:{frontend_port}"
 
     print("=" * 60)
     print("           Starting PDF -> LaTeX Service")
     print("=" * 60)
     print(f"Project root: {PROJECT_ROOT}")
-    print("Backend:      http://localhost:8000 (API Docs: http://localhost:8000/docs)")
-    print("Frontend UI:  http://localhost:5173")
+    print(f"Python:       {sys.executable}")
+    print(f"Backend:      {backend_url} (API Docs: {backend_url}/docs)")
+    print(f"Frontend UI:  {frontend_url}")
     print("=" * 60)
     print("Press Ctrl+C to stop both services.\n")
 
@@ -92,14 +138,14 @@ def main():
     try:
         # 1. Start FastAPI backend
         backend_cmd = [
-            str(venv_py),
+            str(runtime_py),
             "-m",
             "uvicorn",
             "backend.main:app",
             "--host",
             "127.0.0.1",
             "--port",
-            "8000",
+            str(backend_port),
             "--log-level",
             "info",
         ]
@@ -119,10 +165,21 @@ def main():
         # 2. Start Frontend (if directory exists)
         if FRONTEND_DIR.exists():
             npm_cmd = "npm.cmd" if os.name == "nt" else "npm"
-            frontend_cmd = [npm_cmd, "run", "dev"]
+            frontend_cmd = [
+                npm_cmd,
+                "run",
+                "dev",
+                "--",
+                "--port",
+                str(frontend_port),
+                "--strictPort",
+            ]
+            frontend_env = os.environ.copy()
+            frontend_env["VITE_BACKEND_URL"] = backend_url
             frontend_proc = subprocess.Popen(
                 frontend_cmd,
                 cwd=str(FRONTEND_DIR),
+                env=frontend_env,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,

@@ -2,6 +2,9 @@
 setlocal
 cd /d "%~dp0"
 
+if defined VIRTUAL_ENV goto active
+if defined CONDA_PREFIX goto active
+
 if not exist "%~dp0.venv\Scripts\python.exe" goto setup
 
 rem A virtual environment can remain after its base Python installation has
@@ -19,4 +22,8 @@ if errorlevel 1 exit /b %ERRORLEVEL%
 :run
 
 "%~dp0.venv\Scripts\python.exe" "%~dp0run.py" %*
+exit /b %ERRORLEVEL%
+
+:active
+python "%~dp0run.py" %*
 exit /b %ERRORLEVEL%

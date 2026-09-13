@@ -36,7 +36,7 @@ REQUIREMENTS = BACKEND_ROOT / "requirements.txt"
 REQUIREMENTS_MATH = BACKEND_ROOT / "requirements-math.txt"
 REQUIREMENTS_ONNX_CPU = BACKEND_ROOT / "requirements-onnx-cpu.txt"
 REQUIREMENTS_ONNX_CUDA = BACKEND_ROOT / "requirements-onnx-cuda.txt"
-CONSTRAINTS = VENV_DIR / "pdfconv-constraints.txt"
+CONSTRAINTS = Path(sys.prefix) / "pdfconv-constraints.txt"
 
 TOTAL_STEPS = 9
 
@@ -67,9 +67,24 @@ def bootstrap(argv: list[str]) -> int | None:
     """Steps 1 and 2, then hand over to .venv interpreter."""
     args = parse_args(argv)
     console = Console(TOTAL_STEPS, args.verbose)
-    inside = env.running_inside(VENV_DIR)
+    inside_local = env.running_inside(VENV_DIR)
+    inside_active = env.running_inside_virtual_environment()
 
-    if not inside:
+    if inside_active and not inside_local:
+        console.banner("Project Setup")
+        console.step("Checking Python...")
+        console.ok(env.check_python_version())
+        console.step("Checking virtual environment...")
+        if args.recreate_venv:
+            raise SetupError(
+                "--recreate-venv cannot be used while another virtual environment "
+                "is active. Deactivate it first to recreate the project .venv."
+            )
+        console.info(f"Using active environment: {sys.prefix}")
+        console.ok(f"Interpreter: {sys.executable}")
+        return None
+
+    if not inside_local:
         console.banner("Project Setup")
         console.step("Checking Python...")
         console.ok(env.check_python_version())
@@ -228,7 +243,7 @@ def main(argv: list[str] | None = None) -> int:
     console.ok(env.check_python_version())
 
     console.step("Checking virtual environment...")
-    console.info(f"Using: {VENV_DIR}")
+    console.info(f"Using: {sys.prefix}")
     console.ok(f"Interpreter: {sys.executable}")
 
     try:

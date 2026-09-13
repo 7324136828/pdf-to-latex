@@ -1,4 +1,4 @@
-"""Interpreter checks, the project-local virtual environment, and re-entry.
+"""Interpreter checks, active/local virtual environments, and re-entry.
 
 ``setup.py`` is started by whatever Python the user has on PATH.  Everything
 after the first two steps has to happen inside ``.venv`` instead, so this module
@@ -61,6 +61,15 @@ def running_inside(venv_dir: Path) -> bool:
         return Path(sys.prefix).resolve() == venv_dir.resolve()
     except OSError:
         return False
+
+
+def running_inside_virtual_environment() -> bool:
+    """Return whether the current interpreter belongs to any active environment."""
+    return (
+        sys.prefix != getattr(sys, "base_prefix", sys.prefix)
+        or bool(os.environ.get("VIRTUAL_ENV"))
+        or bool(os.environ.get("CONDA_PREFIX"))
+    )
 
 
 def is_usable(venv_dir: Path) -> bool:
